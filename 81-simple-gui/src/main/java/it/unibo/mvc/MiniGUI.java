@@ -2,6 +2,7 @@ package it.unibo.mvc;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,6 +35,8 @@ public class MiniGUI {
         //canvas.add(write, BorderLayout.CENTER);
         canvas.add(panel, BorderLayout.CENTER);
         panel.add(write);
+        final JLabel label = new JLabel("Result:");
+        canvas.add(label, BorderLayout.NORTH);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -42,7 +45,9 @@ public class MiniGUI {
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                System.out.println(randomGenerator.nextInt());
+                int rnd = randomGenerator.nextInt();
+                label.setText("Result: " + rnd);
+                System.out.println(rnd);
             }
         });
     }
