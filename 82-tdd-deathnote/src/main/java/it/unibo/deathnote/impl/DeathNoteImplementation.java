@@ -3,11 +3,15 @@ package it.unibo.deathnote.impl;
 import it.unibo.deathnote.api.DeathNote;
 
 public class DeathNoteImplementation implements DeathNote{
+    
 
     @Override
     public String getRule(int ruleNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRule'");
+        final int nRules = DeathNote.RULES.size();
+        if (ruleNumber < 1 || ruleNumber > nRules) {
+            throw new IllegalArgumentException("You shall give a number within 1 and " + nRules);
+        }
+        return DeathNote.RULES.get(nRules - 1);
     }
 
     @Override
