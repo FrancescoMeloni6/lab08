@@ -8,12 +8,17 @@ import it.unibo.deathnote.api.DeathNote;
 
 public class DeathNoteImplementation implements DeathNote{
 
-    private long currentMillis;
+    private final long MAX_MILLISECONDS_TO_WRITE_DEATH_CAUSE = 40;
+    private final long MAX_MILLISECONDS_TO_WRITE_DETAILS = 6040;
+
+    private long timeLastNameAdded;
+    private long timeLastDeathCauseAdded;
     private Map<String, Pair<String, String>> note;  
     private String lastNameAdded;
 
     public DeathNoteImplementation() {
-        this.currentMillis = 0;
+        this.timeLastNameAdded = 0;
+        this.timeLastDeathCauseAdded = 0;
         this.note = new HashMap<>();
         this.lastNameAdded = null;
     }
@@ -32,20 +37,21 @@ public class DeathNoteImplementation implements DeathNote{
         if (name == null) {
             throw new NullPointerException("The name must not be null!");
         }
-        if (isNameWritten(name)) {
+        if (!isNameWritten(name)) {
             note.put(name, new Pair<>());   
             this.lastNameAdded = name;  
-            startTimer();
+            startTimerDeathCause();
         }
     }
 
     @Override
     public boolean writeDeathCause(String cause) {
-        if (checkIfInTime(40)) {
-            if (isNoteEmpty() || cause == null) {
-                throw new IllegalStateException("The note is empty or the cause is null");
-            }
+        if (isNoteEmpty() || cause == null) {
+            throw new IllegalStateException("The note is empty or the cause is null");
+        }
+        if (checkIfDeathCauseInTime()) {
             note.get(lastNameAdded).setFirst(cause);
+            startTimerDetails();
             return true;
         }
         return false;
@@ -53,8 +59,14 @@ public class DeathNoteImplementation implements DeathNote{
 
     @Override
     public boolean writeDetails(String details) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'writeDetails'");
+        if (isNoteEmpty() || details == null) {
+            throw new IllegalStateException("The note is empty or the details are null");
+        }
+        if (checkIfDetailsInTime()) {
+            note.get(lastNameAdded).setSecond(details);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -78,13 +90,21 @@ public class DeathNoteImplementation implements DeathNote{
         return this.note.containsKey(name);
     }
 
-    private void startTimer() {
-        this.currentMillis = System.currentTimeMillis();
+    private void startTimerDeathCause() {
+        this.timeLastNameAdded = System.currentTimeMillis();
     }
 
-    private Boolean checkIfInTime(long time) {
-        return (this.currentMillis < System.currentTimeMillis() - time);
-    }   
+    private void startTimerDetails() {
+        this.timeLastDeathCauseAdded = System.currentTimeMillis();
+    }
+
+    private Boolean checkIfDeathCauseInTime() {
+        return (this.timeLastNameAdded >= System.currentTimeMillis() - MAX_MILLISECONDS_TO_WRITE_DEATH_CAUSE);
+    }  
+    
+    private Boolean checkIfDetailsInTime() {
+        return (this.timeLastDeathCauseAdded >= System.currentTimeMillis() - MAX_MILLISECONDS_TO_WRITE_DETAILS);
+    }  
 
     private Boolean isNoteEmpty() {
         return this.note.isEmpty();

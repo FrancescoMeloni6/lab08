@@ -62,7 +62,7 @@ class TestDeathNote {
         assertFalse(deathNote.isNameWritten(""));
     }
 
-    private void addNameAndVerify(String name) {
+    private void addNameAndVerify(final String name) {
         deathNote.writeName(name);
         assertTrue(deathNote.isNameWritten(name));
     }
@@ -87,11 +87,12 @@ class TestDeathNote {
         assertEquals(deathNote.getDeathCause(name2), deathCause2);
     }
 
-    private void addCauseOfDeathAndVerify(String cause, String name) {
+    private void addCauseOfDeathAndVerify(final String cause, final String name) {
         deathNote.writeDeathCause(cause);
         assertEquals(deathNote.getDeathCause(name), cause);
     }
 
+    @Test
     void testDetails() throws InterruptedException {
         final String deathDeatails1 = "ran for too long";
         assertThrows(IllegalStateException.class, new Executable() {
@@ -101,11 +102,14 @@ class TestDeathNote {
         });
         final String name1 = "Giancarlo Carli";
         addNameAndVerify(name1);
+        final String deathCause1 = "heart attack";
+        addCauseOfDeathAndVerify(deathCause1, name1);
         assertNull(deathNote.getDeathDetails(name1));
         assertTrue(deathNote.writeDetails(deathDeatails1));
         assertEquals(deathNote.getDeathDetails(name1), deathDeatails1);
         final String name2 = "Anubis";
         addNameAndVerify(name2);
+        addCauseOfDeathAndVerify(deathCause1, name2);
         Thread.sleep(6100);
         assertFalse(deathNote.writeDetails(deathDeatails1));
         assertNull(deathNote.getDeathDetails(name2));
