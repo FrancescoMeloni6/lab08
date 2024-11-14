@@ -1,7 +1,6 @@
 package it.unibo.deathnote;
 
 import java.lang.Thread;
-import java.util.List;
 
 import it.unibo.deathnote.api.DeathNote;
 import it.unibo.deathnote.impl.DeathNoteImplementation;
@@ -93,7 +92,7 @@ class TestDeathNote {
         assertEquals(deathNote.getDeathCause(name), cause);
     }
 
-    void test() throws InterruptedException {
+    void testDetails() throws InterruptedException {
         final String deathDeatails1 = "ran for too long";
         assertThrows(IllegalStateException.class, new Executable() {
             public void execute() throws Throwable {
