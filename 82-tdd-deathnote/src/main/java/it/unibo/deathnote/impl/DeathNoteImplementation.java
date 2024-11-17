@@ -29,7 +29,7 @@ public class DeathNoteImplementation implements DeathNote{
         if (ruleNumber < 1 || ruleNumber > nRules) {
             throw new IllegalArgumentException("You shall give a number within 1 and " + nRules);
         }
-        return DeathNote.RULES.get(nRules - 1);
+        return DeathNote.RULES.get(ruleNumber - 1);
     }
 
     @Override
